@@ -16,3 +16,29 @@ BIRD_IMAGES = [
 
 pygame.font.init()
 FONT_POINTS = pygame.font.SysFont("arial", 50)
+
+
+class Bird:
+    IMGS = BIRD_IMAGES
+    # Animações da rotação
+    MAX_ROTATION = 25
+    ROTATION_SPEED = 20
+    ANIMATION_TIME = 5
+
+    def __int__(self, x, y):
+        self.x = x
+        self.y = y
+        self.angle = 0
+        self.speed = 0
+        self.height = self.y
+        self.time = 0
+        self.image_count = 0
+        self.image = IMGS[0]
+
+
+class Pipe:
+    pass
+
+
+class Floor:
+    pass
