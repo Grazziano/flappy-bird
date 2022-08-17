@@ -33,7 +33,7 @@ class Bird:
         self.height = self.y
         self.time = 0
         self.image_count = 0
-        self.image = IMGS[0]
+        self.image = self.IMGS[0]
 
     def jump(self):
         self.speed = -10.5
@@ -60,6 +60,36 @@ class Bird:
         else:
             if self.angle > -90:
                 self.angle -= self.ROTATION_SPEED
+
+    def draw(self, screen):
+        # definir qual imagem do pássaro vai usar
+        self.image_count += 1
+
+        if self.image_count < self.ANIMATION_TIME:
+            self.image = self.IMGS[0]
+        elif self.image_count < self.ANIMATION_TIME*2:
+            self.image = self.IMGS[1]
+        elif self.image_count < self.ANIMATION_TIME*3:
+            self.image = self.IMGS[2]
+        elif self.image_count < self.ANIMATION_TIME*4:
+            self.image = self.IMGS[1]
+        elif self.image_count >= self.ANIMATION_TIME*4 + 1:
+            self.image = self.IMGS[0]
+            self.image_count = 0
+
+        # se o pássaro estiver caindo não vai pater as asas
+        if self.angle <= 80:
+            self.image = self.IMGS[1]
+            self.image_count = self.ANIMATION_TIME*2
+
+        # desenhar a imagem
+        rotated_image = pygame.transform.rotate(self.image, self.angle)
+        image_center_position = self.image.get_rect(topleft=(self.x, self.y)).center
+        rectangle = rotated_image.get_rect(center=image_center_position)
+        screen.blit(rotated_image, rectangle.topleft)
+
+    def get_mask(self):
+        pygame.mask.from_surface(self.image)
 
 
 class Pipe:
