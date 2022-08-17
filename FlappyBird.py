@@ -93,7 +93,23 @@ class Bird:
 
 
 class Pipe:
-    pass
+    DISTANCE = 200
+    SPEED = 5
+
+    def __int__(self, x):
+        self.x = x
+        self.height = 0
+        self.top_position = 0
+        self.base_position = 0
+        self.TOP_PIPE = pygame.transform.flip(PIPE_IMAGE, False, True)
+        self.BASE_PIPE = PIPE_IMAGE
+        self.passed = False
+        self.set_height()
+
+    def set_height(self):
+        self.height = random.randrange(50, 450)
+        self.top_position = self.height - self.TOP_PIPE.get_height()
+        self.base_position = self.height + self.DISTANCE
 
 
 class Floor:
