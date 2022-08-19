@@ -171,3 +171,28 @@ def draw_screen(screen, birds, pipes, floor, points):
     screen.blit(text, (SCREEN_WIDTH - 10 - text.get_width(), 10))
     floor.blit(screen)
     pygame.display.update()
+
+
+def main():
+    birds = [Bird(230, 350)]
+    floor = Floor(730)
+    pipes = [Pipe(700)]
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    points = 0
+    clock = pygame.time.Clock()
+
+    running = True
+    while running:
+        clock.tick(30)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    for bird in birds:
+                        bird.jump()
+
+        draw_screen(screen, birds, pipes, floor, points)
