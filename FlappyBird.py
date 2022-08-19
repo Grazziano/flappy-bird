@@ -25,7 +25,7 @@ class Bird:
     ROTATION_SPEED = 20
     ANIMATION_TIME = 5
 
-    def __int__(self, x, y):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
         self.angle = 0
@@ -78,7 +78,7 @@ class Bird:
             self.image_count = 0
 
         # se o pássaro estiver caindo não vai pater as asas
-        if self.angle <= 80:
+        if self.angle <= -80:
             self.image = self.IMGS[1]
             self.image_count = self.ANIMATION_TIME*2
 
@@ -89,14 +89,14 @@ class Bird:
         screen.blit(rotated_image, rectangle.topleft)
 
     def get_mask(self):
-        pygame.mask.from_surface(self.image)
+        return pygame.mask.from_surface(self.image)
 
 
 class Pipe:
     DISTANCE = 200
     SPEED = 5
 
-    def __int__(self, x):
+    def __init__(self, x):
         self.x = x
         self.height = 0
         self.top_position = 0
@@ -126,7 +126,7 @@ class Pipe:
         distance_top = (self.x - bird.x, self.top_position - round(bird.y))
         distance_base = (self.x - bird.x, self.base_position - round(bird.y))
 
-        top_point = base_mask.overlap_mask(top_mask, distance_top)
+        top_point = bird_mask.overlap(top_mask, distance_top)
         base_point = bird_mask.overlap(base_mask, distance_base)
 
         if base_point or top_point:
@@ -140,7 +140,7 @@ class Floor:
     WIDTH = FLOOR_IMAGE.get_width()
     IMAGE = FLOOR_IMAGE
 
-    def __int__(self, y):
+    def __init__(self, y):
         self.y = y
         self.x1 = 0
         self.x2 = self.WIDTH
@@ -150,10 +150,10 @@ class Floor:
         self.x2 -= self.SPEED
 
         if self.x1 + self.WIDTH < 0:
-            self.x1 = self.x1 = self.WIDTH
+            self.x1 = self.x2 = self.WIDTH
 
         if self.x2 + self.WIDTH < 0:
-            self.x2 = self.x2 = self.WIDTH
+            self.x2 = self.x1 = self.WIDTH
 
     def draw(self, screen):
         screen.blit(self.IMAGE, (self.x1, self.y))
@@ -169,7 +169,7 @@ def draw_screen(screen, birds, pipes, floor, points):
 
     text = FONT_POINTS.render(f"Pontuação: {points}", 1, (255, 255, 255))
     screen.blit(text, (SCREEN_WIDTH - 10 - text.get_width(), 10))
-    floor.blit(screen)
+    floor.draw(screen)
     pygame.display.update()
 
 
@@ -225,3 +225,7 @@ def main():
                 birds.pop(i)
 
         draw_screen(screen, birds, pipes, floor, points)
+
+
+if __name__ == "__main__":
+    main()
