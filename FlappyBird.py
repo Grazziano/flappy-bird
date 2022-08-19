@@ -185,6 +185,7 @@ def main():
     while running:
         clock.tick(30)
 
+        # interação com o usuário
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -194,5 +195,33 @@ def main():
                 if event.key == pygame.K_SPACE:
                     for bird in birds:
                         bird.jump()
+
+        # mover as coisas
+        for bird in birds:
+            bird.move()
+        floor.move()
+
+        add_pipe = False
+        remove_pipes = []
+        for pipe in pipes:
+            for i, bird in enumerate(birds):
+                if pipe.collide(bird):
+                    birds.pop(i)
+                if not pipe.passed and bird.x > pipe.x:
+                    pipe.passed = True
+                    add_pipe = True
+            pipe.move()
+            if pipe.x + pipe.TOP_PIPE.get_width() < 0:
+                remove_pipes.append(pipe)
+
+        if add_pipe:
+            points += 1
+            pipes.append(Pipe(600))
+        for pipe in remove_pipes:
+            pipes.remove(pipe)
+
+        for i, bird in enumerate(birds):
+            if (bird.y + bird.image.get_height()) > floor.y or bird.y < 0:
+                birds.pop(i)
 
         draw_screen(screen, birds, pipes, floor, points)
